@@ -11,7 +11,7 @@ pipeline {
     tools {
         
         maven 'maven3.6'
-        jdk 'JAVA_HOME'
+      
     }
 
     environment {
@@ -45,12 +45,11 @@ pipeline {
           }
         }
 
-        stage('Building Docker image!!!!!!!!!!!!!!!')
+        stage('Building Docker image')
         {
             steps{
                 script{
-                sh ' docker rmi -f $(docker images -aq) '
-                sh ' docker build -t anjidockerid/abc-org:1.0 . '
+                   sh ' docker build -t anjidockerid/abc-org:1.0 . '
                 }
             }
 
@@ -60,12 +59,26 @@ pipeline {
             steps{
                 script{
                     withCredentials([usernamePassword(credentialsId: 'DockerId', passwordVariable: 'docker_pwd', usernameVariable: 'docker_id')]) {
-                     sh "docker login -u ${DockerId} -p ${docker_pwd}"
+                     sh "docker login -u ${docker_id} -p ${docker_pwd}"
                      sh 'docker push anjidockerid/abc-org:1.0'   
                     }
                 }
             }
 
+        }
+        stage('Removing the local docker images')
+        {
+            steps{
+                script{
+                sh ' docker rmi -f $(docker images -aq) '
+                }
+            }
+        }
+
+        stage("clean workwpace"){
+            steps{
+                cleanWs()
+            }
         }
     }
 
