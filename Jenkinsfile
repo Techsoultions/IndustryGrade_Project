@@ -61,26 +61,34 @@ pipeline {
                 script{
                     withCredentials([usernamePassword(credentialsId: 'DockerId', passwordVariable: 'docker_pwd', usernameVariable: 'docker_id')]) {
                      sh "docker login -u ${docker_id} -p ${docker_pwd}"
-                     sh 'docker push anjidockerid/abc-org:1.0'   
+                     sh "docker push anjidockerid/abc-org:${BUILD_NUM}"   
                     }
                 }
             }
 
         }
-        stage('Removing the local docker images')
+        /*stage('Removing the local docker images')
         {
             steps{
                 script{
                 sh ' docker rmi -f $(docker images -aq) '
                 }
             }
-        }
-
-        stage("clean workwpace"){
-            steps{
-                cleanWs()
-            }
-        }
+        }*/
+        
     }
 
+    post {
+    always {
+      deleteDir() /* clean up our workspace */
+    }
+
+    success {
+      script {
+        echo " Removing the local docker images "
+        sh ' docker rmi -f $(docker images -q) '
+      }
+    }
+
+}
 }
