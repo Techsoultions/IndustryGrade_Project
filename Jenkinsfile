@@ -18,6 +18,7 @@ pipeline {
 
         GIT_CREDENTIALS_ID = 'anji_git_hub_acct'
         SOURCE_GIT_REPO = 'https://github.com/Techsoultions/IndustryGrade_Project.git'
+        BUILD_NUM = "${BUILD_ID}"
     
   }
 
@@ -49,7 +50,7 @@ pipeline {
         {
             steps{
                 script{
-                   sh ' docker build -t anjidockerid/abc-org:1.0 . '
+                   sh " docker build -t anjidockerid/abc-org:${BUILD_NUM} . "
                 }
             }
 
