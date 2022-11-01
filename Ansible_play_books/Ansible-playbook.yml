@@ -1,0 +1,14 @@
+---
+- name: connecting runners to jenkins master
+  hosts: all
+  become: true
+  tasks:
+  - name: copy the swagger client instalation file
+    copy:
+      src: /home/ansible-admin/swarm/swarm.sh
+      dest: /home/ubuntu/swarm/swarm.sh
+      owner: ubuntu
+      group: ubuntu
+      mode: 0645
+  - name: executing swarm script
+    shell: /home/ubuntu/swarm/swarm.sh    
