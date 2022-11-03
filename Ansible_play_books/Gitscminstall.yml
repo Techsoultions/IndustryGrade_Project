@@ -1,0 +1,21 @@
+---
+- name: GIT SCM installation 
+  hosts: localhost
+  become: yes
+  become_user: root
+
+  tasks:
+    
+    - name: update ec2 instance
+      yum:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: install GIT 
+      yum: 
+        name: git 
+        state: latest
+
+    - name: get git version
+      shell: git version   
